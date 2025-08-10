@@ -1,5 +1,10 @@
 # Second Largest
 
-**Difficulty:** Difficulty: Easy
+**Difficulty:** Easy
+**Tags:** **** (Add tags here)
 
-**Tags:** (Add tags here)
+---
+
+# Second Largest **Difficulty:** Difficulty: Easy **Tags:** (Add tags here) 
+
+---
