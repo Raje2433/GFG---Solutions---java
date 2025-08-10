@@ -17,15 +17,24 @@ jobs:
       - name: Sanitize README inside problem folders
         run: |
           shopt -s globstar nullglob
-          for file in Difficulty*/*/README.md; do
-            # file will match "Difficulty: Easy/Array Duplicates/README.md"
-            folder_name=$(basename "$(dirname "$file")")
-            slug=$(echo "$folder_name" | tr ' ' '-' | tr 'A-Z' 'a-z')
+          # Match README files inside: Difficulty*/<problem-folder>/problems/README.md
+          for file in Difficulty*/*/problems/README.md; do
+            folder_name=$(basename "$(dirname "$file")") # problem folder name
             title=$(echo "$folder_name" | sed -r 's/-/ /g' | sed -r 's/\b(.)/\u\1/g')
 
+            # Try to extract the original link from the existing README (if present)
+            original_link=$(grep -Eo 'https://www.geeksforgeeks.org/problems/[A-Za-z0-9-]+' "$file" | head -n 1)
+
+            # If no link found, skip this file
+            if [ -z "$original_link" ]; then
+              echo "⚠️ No link found in $file, skipping..."
+              continue
+            fi
+
+            # Overwrite the README with clean format
             {
               echo "# $title"
-              echo "[View on GeeksforGeeks](https://www.geeksforgeeks.org/problems/$slug/)"
+              echo "[View on GeeksforGeeks]($original_link)"
             } > "$file"
           done
 
