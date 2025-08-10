@@ -1,11 +1,7 @@
-# DSA Practice Problems
+#GeeksforGeeks Java Solutions
+This repository contains Java solutions to problems from GeeksforGeeks.
 
-A collection of solved Data Structures & Algorithms problems from GeeksforGeeks.
+#Structure
+Problems are organized by difficulty level (Easy, Medium, etc.).
 
-## 🟢 Easy
-- Array Duplicates – [View on GFG](https://www.geeksforgeeks.org/problems/array-duplicates)
-- Second Largest – [View on GFG](https://www.geeksforgeeks.org/problems/second-largest3735)
-
-## 🟡 Medium
-- Kadane's Algorithm – [View on GFG](https://www.geeksforgeeks.org/problems/kadanes-algorithm-1587115620)
-- Peak Element – [View on GFG](https://www.geeksforgeeks.org/problems/peak-element/1)
+Each folder contains the Java solution file for the respective problem.
