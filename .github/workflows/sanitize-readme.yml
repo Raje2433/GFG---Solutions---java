@@ -1,4 +1,4 @@
-name: Format GFG Problem READMEs
+name: Delete GFG Problem READMEs
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  format-readme:
+  delete-readmes:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -14,37 +14,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Reformat README files
+      - name: Delete README.md files
         run: |
           shopt -s globstar nullglob
-          for file in Difficulty*/*/README.md; do
-            folder_name=$(basename "$(dirname "$file")")
-
-            # Convert folder name to title
-            title=$(echo "$folder_name" | sed -r 's/-/ /g' | sed -r 's/\b(.)/\u\1/g')
-
-            # Extract link from existing file if present
-            link=$(grep -Eo 'https://www\.geeksforgeeks\.org/problems/[a-zA-Z0-9-]+' "$file" | head -n 1)
-
-            # If no link found, skip
-            if [ -z "$link" ]; then
-              echo "No link found in $file, skipping..."
-              continue
-            fi
-
-            # Write new README format
-            {
-              echo "# $title"
-              echo "[View on GeeksforGeeks]($link)"
-              echo ""
-              tail -n +1 "$file" | grep -v 'https://www\.geeksforgeeks\.org/problems/'
-            } > "$file"
-          done
+          rm -f Difficulty*/*/README.md
 
       - name: Commit changes
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add .
-          git commit -m "Formatted GFG README files with title and link" || echo "No changes to commit"
+          git add -u
+          git commit -m "Deleted all GFG README.md files" || echo "No changes to commit"
           git push
