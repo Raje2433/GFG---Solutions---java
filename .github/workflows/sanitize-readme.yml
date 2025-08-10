@@ -1,0 +1,40 @@
+name: Sanitize GFG Problem READMEs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sanitize:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Sanitize README inside problem folders
+        run: |
+          shopt -s globstar nullglob
+          for file in Difficulty*/*/README.md; do
+            # file will match "Difficulty: Easy/Array Duplicates/README.md"
+            folder_name=$(basename "$(dirname "$file")")
+            slug=$(echo "$folder_name" | tr ' ' '-' | tr 'A-Z' 'a-z')
+            title=$(echo "$folder_name" | sed -r 's/-/ /g' | sed -r 's/\b(.)/\u\1/g')
+
+            {
+              echo "# $title"
+              echo "[View on GeeksforGeeks](https://www.geeksforgeeks.org/$slug/)"
+              echo
+              echo "> **Note:** This README is auto-generated to include only the title and a link to the original problem."
+            } > "$file"
+          done
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Sanitized GFG problem README files" || echo "No changes to commit"
+          git push
