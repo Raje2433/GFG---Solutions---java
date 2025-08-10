@@ -14,22 +14,33 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Sanitize README inside problem folders
+      - name: Sanitize README files
         run: |
           shopt -s globstar nullglob
           for file in Difficulty*/*/README.md; do
-            folder_name=$(basename "$(dirname "$file")")  # Problem title
-            difficulty=$(basename "$(dirname "$(dirname "$file")")")  # Difficulty folder
-
-            # Capitalize first letter of each word in title
+            folder_name=$(basename "$(dirname "$file")")
             title=$(echo "$folder_name" | sed -r 's/-/ /g' | sed -r 's/\b(.)/\u\1/g')
+
+            # Extract difficulty
+            difficulty=$(grep -iE 'Easy|Medium|Hard' "$file" | head -n 1 | grep -oE 'Easy|Medium|Hard' || echo "Unknown")
+
+            # Extract tags (if a "Tags:" line exists)
+            tags=$(grep -i "Tags:" "$file" | sed 's/Tags://I' | xargs || echo "None")
+
+            # Extract first 2-3 non-empty lines for description
+            description=$(grep -vE '^$|Example|Constraints|Input|Output' "$file" | head -n 3 | tr '\n' ' ' | sed 's/  */ /g')
 
             {
               echo "# $title"
               echo ""
               echo "**Difficulty:** $difficulty"
+              echo "**Tags:** $tags"
               echo ""
-              echo "**Tags:** (Add tags here)"
+              echo "---"
+              echo ""
+              echo "$description"
+              echo ""
+              echo "---"
             } > "$file"
           done
 
