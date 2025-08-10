@@ -3,7 +3,7 @@ This repository contains Java solutions to problems from GeeksforGeeks.
 
 ---
 
-# 🧠 Structure
+## 🧠 Structure
 
 - 📌 Problems are organized by difficulty level (Easy, Medium, etc.).
 
