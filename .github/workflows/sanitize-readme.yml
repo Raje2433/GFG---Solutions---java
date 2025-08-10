@@ -25,9 +25,7 @@ jobs:
 
             {
               echo "# $title"
-              echo "[View on GeeksforGeeks](https://www.geeksforgeeks.org/$slug/)"
-              echo
-              echo "> **Note:** This README is auto-generated to include only the title and a link to the original problem."
+              echo "[View on GeeksforGeeks](https://www.geeksforgeeks.org/problems/$slug/)"
             } > "$file"
           done
 
