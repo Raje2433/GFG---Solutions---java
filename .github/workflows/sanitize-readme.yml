@@ -19,15 +19,25 @@ jobs:
           shopt -s globstar nullglob
           for file in Difficulty*/*/README.md; do
             folder_name=$(basename "$(dirname "$file")")
+
+            # Convert folder name to title
             title=$(echo "$folder_name" | sed -r 's/-/ /g' | sed -r 's/\b(.)/\u\1/g')
 
-            # Keep exact problem text
-            problem_text=$(cat "$file")
+            # Extract link from existing file if present
+            link=$(grep -Eo 'https://www\.geeksforgeeks\.org/problems/[a-zA-Z0-9-]+' "$file" | head -n 1)
 
+            # If no link found, skip
+            if [ -z "$link" ]; then
+              echo "No link found in $file, skipping..."
+              continue
+            fi
+
+            # Write new README format
             {
               echo "# $title"
+              echo "[View on GeeksforGeeks]($link)"
               echo ""
-              echo "$problem_text"
+              tail -n +1 "$file" | grep -v 'https://www\.geeksforgeeks\.org/problems/'
             } > "$file"
           done
 
@@ -36,5 +46,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git add .
-          git commit -m "Formatted GFG problem README files" || echo "No changes to commit"
+          git commit -m "Formatted GFG README files with title and link" || echo "No changes to commit"
           git push
